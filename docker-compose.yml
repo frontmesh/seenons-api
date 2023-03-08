@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:14
+    container_name: db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA: /var/lib/postgresql/data2
+    env_file:
+      - .env
+    ports:
+      - 5432:5432
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./db-data:/var/lib/postgresql/data2
+  app:
+    build: .
+    container_name: app
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+    volumes:
+      - .:/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - db

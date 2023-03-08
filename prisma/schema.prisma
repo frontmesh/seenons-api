@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Provider {
+  id                  Int               @id @default(autoincrement())
+  name                String
+  supportedStreams    Stream[]
+  supportedContainers Container[]
+
+  // supportedStreams    Int[] // Array of supported waste streams
+  // supportedContainers Int[] // Array of supported container types
+  postalCodeRanges    PostalCodeRange[]
+  availableSlots      Slot[]
+
+  @@map("providers")
+}
+
+model PostalCodeRange {
+  id       Int                 @id @default(autoincrement())
+  start    Int
+  end      Int
+  provider Provider[]
+
+  @@map("postal_code_ranges")
+}
+
+model Slot {
+  id                  Int                @id @default(autoincrement())
+  dayOfWeek           DayOfWeek
+  timeStart           String             @default("09:00:00")
+  timeEnd             String             @default("17:00:00")
+  provider            Provider[]
+
+  @@map("slots")
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+model Customer {
+  id      Int      @id @default(autoincrement())
+  name    String
+  email   String   @unique
+  postalCode Int?
+
+  @@map("customers")
+}
+
+model Container {
+  id          Int      @id @default(autoincrement())
+  category    String
+  subCategory String
+  size        Int
+  sizeUnit    String
+  imageUrl    String
+  placementType String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  providers   Provider[]
+
+  @@map("containers")
+}
+
+model Stream {
+  id              Int     @id @default(autoincrement())
+  type            String
+  image           String
+  textColor       String
+  backgroundColor String
+  name            Json
+  description     Json
+  detailsUrl      String?
+  providers       Provider[]
+
+  @@map("streams")
+}
