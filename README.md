@@ -33,3 +33,7 @@ $ yarn run start:prod
 ```bash
 docker compose -f ./docker-compose.yml up  --build
 ```
+
+Once the application is succesfully running you can find Swagger Open API at following address:
+
+http://localhost:3000/api

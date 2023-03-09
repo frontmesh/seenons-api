@@ -5,5 +5,6 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 
+RUN npx prisma generate
 RUN npm run build
 ENTRYPOINT npm run migrate && npm run seed && npm run start
