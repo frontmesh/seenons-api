@@ -15,9 +15,6 @@ model Provider {
   name                String
   supportedStreams    Stream[]
   supportedContainers Container[]
-
-  // supportedStreams    Int[] // Array of supported waste streams
-  // supportedContainers Int[] // Array of supported container types
   postalCodeRanges    PostalCodeRange[]
   availableSlots      Slot[]
 
